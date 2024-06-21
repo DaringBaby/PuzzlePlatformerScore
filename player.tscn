@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=3 uid="uid://403dexn5u3kb"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_s3xbt"]
+[ext_resource type="Texture2D" uid="uid://6r6ft08y2r54" path="res://sprites/player.png" id="2_6o8g5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vk3xw"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uyagw"]
+size = Vector2(18, 14)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_s3xbt")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_6o8g5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_vk3xw")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+limit_left = 0
+limit_top = 0
+limit_right = 320
+limit_bottom = 320
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_vk3xw")
+
+[node name="WallHug" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallHug"]
+shape = SubResource("RectangleShape2D_uyagw")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.15
+one_shot = true
+
+[node name="DashTimer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
+[connection signal="body_entered" from="WallHug" to="." method="_on_wall_hug_body_entered"]
+[connection signal="body_exited" from="WallHug" to="." method="_on_wall_hug_body_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="DashTimer" to="." method="_on_dash_timer_timeout"]
