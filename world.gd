@@ -15,6 +15,7 @@ var submit_score_http = HTTPRequest.new()
 
 func _ready():
 	_authentication_request()
+# dayum
 
 func _process(_delta):
 	if(Input.is_action_just_pressed("ui_up")):
