@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://403dexn5u3kb"]
+[gd_scene load_steps=6 format=3 uid="uid://403dexn5u3kb"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_s3xbt"]
 [ext_resource type="Texture2D" uid="uid://6r6ft08y2r54" path="res://sprites/player.png" id="2_6o8g5"]
@@ -6,10 +6,15 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vk3xw"]
 size = Vector2(16, 16)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fe0or"]
+size = Vector2(13, 13)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uyagw"]
-size = Vector2(18, 14)
+size = Vector2(20, 14)
 
 [node name="Player" type="CharacterBody2D"]
+collision_layer = 5
+collision_mask = 5
 script = ExtResource("1_s3xbt")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -29,7 +34,7 @@ collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Hitbox"]
-shape = SubResource("RectangleShape2D_vk3xw")
+shape = SubResource("RectangleShape2D_fe0or")
 
 [node name="WallHug" type="Area2D" parent="."]
 
@@ -41,9 +46,10 @@ wait_time = 0.15
 one_shot = true
 
 [node name="DashTimer" type="Timer" parent="."]
-wait_time = 0.3
+wait_time = 0.25
 one_shot = true
 
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="body_entered" from="WallHug" to="." method="_on_wall_hug_body_entered"]
 [connection signal="body_exited" from="WallHug" to="." method="_on_wall_hug_body_exited"]

@@ -7,14 +7,14 @@ var development_mode = true
 var leaderboard_key = "leaderboardKey2"
 var session_token = ""
 var score = 0
-
+var pId = ""
 # HTTP Request node can only handle one call per node
 var auth_http = HTTPRequest.new()
 var leaderboard_http = HTTPRequest.new()
 var submit_score_http = HTTPRequest.new()
 
 func _ready():
-	_authentication_request()
+	pass
 # dayum
 
 func _process(_delta):
@@ -28,20 +28,22 @@ func _process(_delta):
 	
 	# Upload score when pressing enter
 	if(Input.is_action_just_pressed("ui_accept")):
-		_upload_score(score)
+		#_upload_score(score)
+		pass
 	
 	# Get score when pressing spacebar
 	if(Input.is_action_just_pressed("ui_select")):
-		_get_leaderboards()
+		#_get_leaderboards()
+		pass
 
 
 func _authentication_request():
 	# Check if a player session exists
 	var player_session_exists = false
-	var player_identifier : String
+	var player_identifier = pId
 	var file = FileAccess.open("user://LootLocker.data", FileAccess.READ)
 	if file != null:
-		player_identifier = file.get_as_text()
+		player_identifier = pId
 		print("player ID="+player_identifier)
 		file.close()
  
@@ -89,7 +91,7 @@ func _on_authentication_request_completed(result, response_code, headers, body):
 	# Clear node
 	auth_http.queue_free()
 	# Get leaderboards
-	_get_leaderboards()
+	#_get_leaderboards()
 
 
 func _get_leaderboards():

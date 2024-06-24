@@ -9,6 +9,8 @@ var last_checkpoint = Vector2()
 
 var score  = 0
 var deaths = 0
+var lives = 10
+
 var dj = true
 var max_falling_speed = 450
 var wall_hugging = false
@@ -23,12 +25,15 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var particles = preload("res://particles.tscn")
 
 func _ready():
-	last_checkpoint = Vector2(32, 250)
+	Score._authentication_request()
+	last_checkpoint = Vector2(24, 250)
 	pass
 
 
 func _physics_process(delta):
-	print($DashTimer.time_left)
+	
+	print("wall hugging: " + str(wall_hugging))
+	print("wj: " +str (wj))
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * delta
@@ -51,7 +56,10 @@ func _physics_process(delta):
 			$Timer.start()
 			dj = true
 			wj = true
-			velocity.x += SPEED
+			if right:
+				velocity.x += SPEED
+			else:
+				velocity.x -= SPEED
 	# DOUBLE JUMP
 	if Input.is_action_just_pressed("ui_accept") and dj and (not is_on_floor() and not wall_hugging):
 		dj = false
@@ -89,27 +97,32 @@ func _physics_process(delta):
 
 
 func _on_hitbox_body_entered(body):
-	if body.name == "Spikes":
-		print("die")
-		var part = particles.instantiate()
-		part.position = position
-		part.emitting = true
-		get_tree().get_root().add_child(part)
-		deaths += 1
-		position = last_checkpoint
+	print("die")
+	var part = particles.instantiate()
+	part.position = position
+	part.emitting = true
+	get_tree().get_root().add_child(part)
+	deaths += 1
+	lives -= 1
+	dashing = false
+	position = last_checkpoint
+	if lives < 0:
+		# Game Over 
+		Score._upload_score(score)
+		pass
 	pass # Replace with function body.
 
 
 func _on_wall_hug_body_entered(body):
 	print(body.name)
-	if body.name == "Terrain":
+	if body.name == "Terrain" or body.name == "Spikes":
 		max_falling_speed = 50
 		wall_hugging = true
 	pass # Replace with function body.
 
 
 func _on_wall_hug_body_exited(body):
-	if body.name == "Terrain":
+	if body.name == "Terrain" or body.name == "Spikes":
 		max_falling_speed = 450
 		wall_hugging = false
 	pass # Replace with function body.
@@ -123,3 +136,63 @@ func _on_timer_timeout():
 func _on_dash_timer_timeout():
 	dashing = false
 	pass # Replace with function body.
+
+
+func _on_hitbox_area_entered(area):
+	lives += 5
+	var camera_limit_top
+	var camera_limit_bottom
+	if area.is_in_group("NextZone"):
+		dashing = false
+		score += 1
+		last_checkpoint.x = 24
+	match decide_zone():
+		0:
+			last_checkpoint.y = 320-48
+			camera_limit_top = 320*0
+			camera_limit_bottom = 320*1
+		1:
+			last_checkpoint.y = (320*2)-48
+			camera_limit_top = 320*1
+			camera_limit_bottom = 320 * 2
+		2:
+			last_checkpoint.y = (320*3)-48
+			camera_limit_top = 320*2
+			camera_limit_bottom = 320 * 3
+		3:
+			last_checkpoint.y = (320*4)-48
+			camera_limit_top = 320*3
+			camera_limit_bottom = 320 * 4
+		4:
+			last_checkpoint.y = (320*5)-48
+			camera_limit_top = 320*4
+			camera_limit_bottom = 320 * 5
+		5:
+			last_checkpoint.y = (320*6)-48
+			camera_limit_top = 320*5
+			camera_limit_bottom = 320 * 6
+		6:
+			last_checkpoint.y = (320*7)-48
+			camera_limit_top = 320*6
+			camera_limit_bottom = 320 * 7
+		7:
+			last_checkpoint.y = (320*8)-48
+			camera_limit_top = 320*7
+			camera_limit_bottom = 320 * 8
+		8:
+			last_checkpoint.y = (320*9)-48
+			camera_limit_top = 320*8
+			camera_limit_bottom = 320 *9
+		9:
+			last_checkpoint.y = (320*10)-48
+			camera_limit_top = 320*9
+			camera_limit_bottom = 320 * 10
+	position = last_checkpoint
+	$Camera2D.limit_top = camera_limit_top
+	$Camera2D.limit_bottom = camera_limit_bottom
+	pass # Replace with function body.
+
+func decide_zone():
+	randomize()
+	var zone = randi_range(0, 9)
+	return zone

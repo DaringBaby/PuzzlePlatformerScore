@@ -8,7 +8,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	$GUI/Score.text = "Score:  " + str($Player.score)
-	$GUI/Deaths.text = "Deaths: " + str($Player.deaths)
-	$GUI/Lives.text = "Lives: " + str($Player.lives)
+	if !$LineEdit.text.is_empty() and Input.is_action_just_pressed("ui_accept"):
+		Score.pId = $LineEdit.text
+		get_tree().change_scene_to_file ("res://world.tscn")
 	pass
