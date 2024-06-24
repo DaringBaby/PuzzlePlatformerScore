@@ -25,15 +25,29 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var particles = preload("res://particles.tscn")
 
 func _ready():
-	Score._authentication_request()
 	last_checkpoint = Vector2(24, 250)
 	pass
 
+func on_got_leaderboard():
+	get_tree().change_scene_to_file ("res://scores.tscn")
+	pass
+
+func animations():
+	if velocity.x == 0 and is_on_floor():
+		$Sprite2D.play("default")
+	if right:
+		$Sprite2D.flip_h = false
+	else:
+		$Sprite2D.flip_h = true
+	if velocity.x != 0 and is_on_floor() and not $Sprite2D.animation == "walking":
+		$Sprite2D.play("walking")
+	if wall_hugging:
+		$Sprite2D.play("wallhug")
+	
+
 
 func _physics_process(delta):
-	
-	print("wall hugging: " + str(wall_hugging))
-	print("wj: " +str (wj))
+	animations()
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * delta
@@ -60,10 +74,12 @@ func _physics_process(delta):
 				velocity.x += SPEED
 			else:
 				velocity.x -= SPEED
+		$Sprite2D.play("jumping")
 	# DOUBLE JUMP
 	if Input.is_action_just_pressed("ui_accept") and dj and (not is_on_floor() and not wall_hugging):
 		dj = false
 		velocity.y = JUMP_VELOCITY
+		$Sprite2D.play("jumping")
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
@@ -97,7 +113,6 @@ func _physics_process(delta):
 
 
 func _on_hitbox_body_entered(body):
-	print("die")
 	var part = particles.instantiate()
 	part.position = position
 	part.emitting = true
@@ -106,9 +121,12 @@ func _on_hitbox_body_entered(body):
 	lives -= 1
 	dashing = false
 	position = last_checkpoint
+	velocity.x = 0
+	velocity.y = 0
 	if lives < 0:
 		# Game Over 
 		Score._upload_score(score)
+		get_tree().change_scene_to_file ("res://scores.tscn")
 		pass
 	pass # Replace with function body.
 

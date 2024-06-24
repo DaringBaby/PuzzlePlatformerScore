@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://c2ogf2ve6aagb"]
+
+[ext_resource type="Script" path="res://scripts/MainMenu.gd" id="1_selr1"]
+[ext_resource type="Texture2D" uid="uid://ckpubc405ou0q" path="res://maintitle.png" id="2_rgsok"]
+[ext_resource type="FontFile" uid="uid://oaajgqbyoncv" path="res://dogicapixel.ttf" id="3_8vel6"]
+[ext_resource type="AudioStream" uid="uid://dew5rhepe6ar5" path="res://starlight-204347.mp3" id="4_t7ojt"]
+
+[node name="MainMenu" type="Node2D"]
+script = ExtResource("1_selr1")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_rgsok")
+
+[node name="Label" type="Label" parent="."]
+offset_left = 192.0
+offset_top = 302.0
+offset_right = 316.0
+offset_bottom = 325.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_8vel6")
+text = "DaringDev"
+
+[node name="Label2" type="Label" parent="."]
+offset_top = 208.0
+offset_right = 320.0
+offset_bottom = 231.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_8vel6")
+text = "START"
+horizontal_alignment = 1
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_t7ojt")
+volume_db = -10.0
+autoplay = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="finished" from="AudioStreamPlayer" to="." method="_on_audio_stream_player_finished"]

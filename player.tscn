@@ -1,24 +1,83 @@
-[gd_scene load_steps=6 format=3 uid="uid://403dexn5u3kb"]
+[gd_scene load_steps=14 format=3 uid="uid://403dexn5u3kb"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_s3xbt"]
-[ext_resource type="Texture2D" uid="uid://6r6ft08y2r54" path="res://sprites/player.png" id="2_6o8g5"]
+[ext_resource type="Texture2D" uid="uid://e8wtgqqx8dhs" path="res://sprites/playerWalking1.png" id="2_luweb"]
+[ext_resource type="Texture2D" uid="uid://drn2r4hoqc7je" path="res://sprites/playerJumping.png" id="3_7jw7e"]
+[ext_resource type="Texture2D" uid="uid://cydxqpakfl1wy" path="res://sprites/playerWalking2.png" id="4_3udit"]
+[ext_resource type="Texture2D" uid="uid://cb4ypkf8ai82d" path="res://sprites/playerWalking3.png" id="5_01l0w"]
+[ext_resource type="Texture2D" uid="uid://bxgvfkoaej1aw" path="res://sprites/playerWalking4.png" id="6_3cfe7"]
+[ext_resource type="Texture2D" uid="uid://xuxhiilts45e" path="res://sprites/playerWalking5.png" id="7_r7tq4"]
+[ext_resource type="Texture2D" uid="uid://86q8hu3lm2ja" path="res://sprites/playerWalking6.png" id="8_wigu1"]
+[ext_resource type="Texture2D" uid="uid://c68abtshyw8nm" path="res://sprites/wallJump.png" id="9_4fbef"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_axul0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_luweb")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_7jw7e")
+}],
+"loop": true,
+"name": &"jumping",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_3udit")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_01l0w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_3cfe7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_r7tq4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_wigu1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_luweb")
+}],
+"loop": true,
+"name": &"walking",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_4fbef")
+}],
+"loop": true,
+"name": &"wallhug",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vk3xw"]
-size = Vector2(16, 16)
+size = Vector2(12, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fe0or"]
 size = Vector2(13, 13)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uyagw"]
-size = Vector2(20, 14)
+size = Vector2(16, 14)
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 5
 collision_mask = 5
 script = ExtResource("1_s3xbt")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_6o8g5")
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -2)
+sprite_frames = SubResource("SpriteFrames_axul0")
+animation = &"wallhug"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_vk3xw")
